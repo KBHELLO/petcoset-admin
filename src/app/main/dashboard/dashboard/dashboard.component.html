@@ -1,0 +1,24 @@
+<div class="container-fluid p-font">
+    <div class="row p-2">
+        <div class="col-md-3 col-lg-3 col-sm-12 mt-2">
+            <div (mousedown)="getpath('vendor')">
+                <app-card [bgcolor]="'primary'" [bodyLable]="'Vendor (Pending)'"></app-card>
+            </div>
+        </div>
+        <div class="col-md-3 col-lg-3 col-sm-12 mt-2">
+            <div (mousedown)="getpath('vendor-verified')">
+                <app-card [bgcolor]="'warning'" [bodyLable]="'Vendor (Verified)'"></app-card>
+            </div>
+        </div>
+        <div class="col-md-3 col-lg-3 col-sm-12 mt-2">
+            <div (mousedown)="getpath('customer')">
+                <app-card [bgcolor]="'danger'" [bodyLable]="'Customer (Pending)'"></app-card>
+            </div>
+        </div>
+        <div class="col-md-3 col-lg-3 col-sm-12 mt-2">
+            <div (mousedown)="getpath('customer-approve')">
+                <app-card [bgcolor]="'success'" [bodyLable]="'Customer (Approve)'"></app-card>
+            </div>
+        </div>
+    </div>
+</div>
