@@ -1,31 +1,79 @@
-<div class="container-fluid p-font pt-5 pb-5">
-    <div class="card border shadow-sm">
-        <div class="table-responsive table-design">
-            <table class="table text-center">
-                <thead class="thead-dark ces-list-thead">
+<main class="vendor-page p-font">
+    <header class="page-header">
+        <div>
+            <p class="page-eyebrow">VENDOR MANAGEMENT</p>
+            <h1>Verified vendors</h1>
+            <p class="page-description">Browse approved partners and their contact details.</p>
+        </div>
+        <div class="pending-summary verified-summary">
+            <span class="summary-dot"></span>
+            <strong>{{verifiedVendorList.length}}</strong>
+            <span>verified partners</span>
+        </div>
+    </header>
+
+    <section class="vendor-panel" aria-labelledby="verified-vendors-heading">
+        <div class="panel-toolbar">
+            <div>
+                <h2 id="verified-vendors-heading">Verified vendor directory</h2>
+                <p>Approved vendors currently listed in the directory.</p>
+            </div>
+            <label class="vendor-search">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="10.8" cy="10.8" r="6.8"></circle>
+                    <path d="m16 16 4.5 4.5"></path>
+                </svg>
+                <input type="search" aria-label="Search verified vendors" placeholder="Search vendors" [(ngModel)]="searchTerm">
+            </label>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table vendor-table">
+                <thead>
                     <tr>
-                        <th scope="col">Name</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">Phone Number</th>
-                        <th scope="col">Action</th>
+                        <th scope="col">Vendor</th>
+                        <th scope="col">Email address</th>
+                        <th scope="col" class="phone-column">Phone number</th>
+                        <th scope="col">Status</th>
+                        <th scope="col" class="action-heading">Action</th>
                     </tr>
                 </thead>
-                <tbody class="ces-list-tbody">
-                    <ng-container *ngIf="verifiedVendorList && verifiedVendorList.length; else noDataFound">
-                        <tr *ngFor="let entry of verifiedVendorList">
-                            <td>{{entry.first_name}} {{entry.last_name}}</td>
-                            <td>{{entry.email}}</td>
-                            <td>{{entry.phone_number}}</td>
-                            <td class="text-center text-white"><button class="btn btn-sm btn-info" [routerLink]="['/admin/vendor/vendor-details', entry.id]"><i class="fa fa-eye" aria-hidden="true"></i></button></td>
-                        </tr>
-                    </ng-container>
-                    <ng-template #noDataFound>
-                        <tr>
-                            <td colspan="12">No Entries</td>
-                        </tr>
-                    </ng-template>
+                <tbody>
+                    <tr *ngFor="let entry of filteredVendors">
+                        <td>
+                            <div class="vendor-identity">
+                                <span class="vendor-avatar">{{entry.first_name.charAt(0)}}{{entry.last_name.charAt(0)}}</span>
+                                <span class="vendor-name">
+                                    <strong>{{entry.first_name}} {{entry.last_name}}</strong>
+                                    <small>Vendor #{{entry.id}}</small>
+                                </span>
+                            </div>
+                        </td>
+                        <td class="contact-cell">{{entry.email}}</td>
+                        <td class="contact-cell phone-column">{{entry.phone_number}}</td>
+                        <td><span class="status-badge verified-badge"><span></span>Verified</span></td>
+                        <td class="action-cell">
+                            <button type="button" class="details-button" [routerLink]="['/admin/vendor/vendor-details', entry.id]">
+                                Details
+                                <span aria-hidden="true">&rarr;</span>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr *ngIf="filteredVendors.length === 0">
+                        <td colspan="5">
+                            <div class="empty-state">
+                                <strong>No vendors found</strong>
+                                <span>Try a different name, email, or phone number.</span>
+                            </div>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
-    </div>
-</div>
+
+        <footer class="panel-footer">
+            <span>Showing <strong>{{filteredVendors.length}}</strong> of <strong>{{verifiedVendorList.length}}</strong> vendors</span>
+            <span class="demo-label">Sample data</span>
+        </footer>
+    </section>
+</main>

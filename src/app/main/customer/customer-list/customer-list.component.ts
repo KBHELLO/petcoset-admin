@@ -1,8 +1,7 @@
 import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { AuthenticationService } from 'src/app/authentication.service';
-import { NgxSpinnerService } from 'ngx-spinner';
-import { DatePipe } from '@angular/common';
+import { MOCK_BOOKINGS } from '../customer.mock';
 
 @Component({
   selector: 'app-customer-list',
@@ -13,55 +12,33 @@ export class CustomerListComponent implements OnInit {
 
   requestList = [];
   type;
+  searchTerm = '';
+
   constructor(
     private _authService: AuthenticationService,
-    private spinner: NgxSpinnerService,
-    private datePipe: DatePipe,
     private active: ActivatedRoute
   ) { }
 
   ngOnInit() {
-    this.spinner.show();
     this.type = this.active.snapshot.params.type;
-    console.log(this.type);
     this._authService.headerText.next({
-      headerStrong: 'Customers List'
+      headerStrong: this.type === 'approve' ? 'Approved Customers' : 'Pending Customers'
     });
-    this.getCustomerPendingList();
+    this.requestList = MOCK_BOOKINGS.filter(booking =>
+      booking.booking_status_id === (this.type === 'approve' ? 6 : 4)
+    );
   }
 
-  /**
-   * METHOD TO GET PENDING CUSTOMER REQUEST LIST
-   */
-  getCustomerPendingList = () => {
-    if (this.type === 'pending') {
-      setTimeout(() => {
-        this._authService.request('get', `booking?booking_status_id=4`)
-          .subscribe(response => {
-            console.log('customer list ', response);
-            if (response.res.length > 0) {
-              this.requestList = response.res;
-            } else {
-              this.requestList = [];
-            }
-            this.spinner.hide();
-          });
-      }, 1000);
+  get filteredRequests() {
+    const query = this.searchTerm.trim().toLowerCase();
+    if (!query) {
+      return this.requestList;
     }
-    if (this.type === 'approve') {
-      setTimeout(() => {
-        this._authService.request('get', `booking?booking_status_id=6`)
-        .subscribe(response => {
-          console.log('customer list ', response);
-          if(response.res.length > 0) {
-            this.requestList = response.res;
-          } else {
-            this.requestList = [];
-          }
-          this.spinner.hide();
-        });
-      }, 1000);
-     }
+
+    return this.requestList.filter(request => {
+      const searchableText = `${request.CustomerFirstName} ${request.CustomerLastName} ${request.email} ${request.phone_number} ${request.service_name}`;
+      return searchableText.toLowerCase().indexOf(query) !== -1;
+    });
   }
 
 }

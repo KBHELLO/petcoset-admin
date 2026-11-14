@@ -1,72 +1,132 @@
-<div class="container-fluid mt-4 p-font">
-    <div class="row">
-        <div class="col-md-2 div col-lg-2 col-6">
-            <img src="../../../../assets/image/avatar.png" alt="customer-img" srcset="" class="img-thumbnail" style="max-width: 50%;">
+<main class="customer-detail-page p-font" *ngIf="bookingDetails">
+    <a class="back-link" [routerLink]="['/admin/customer/customer-list', type]">
+        <span aria-hidden="true">&larr;</span>
+        Back to {{type === 'approve' ? 'approved' : 'pending'}} bookings
+    </a>
+
+    <header class="detail-header">
+        <div>
+            <p class="page-eyebrow">BOOKING #{{bookingDetails.id}}</p>
+            <h1>{{bookingDetails.CustomerFirstName}} {{bookingDetails.CustomerLastName}}</h1>
+            <p class="page-description">Review the customer profile and booking information.</p>
         </div>
-        <div class=" col-md-10 col-lg-10 col-6"></div>
-        <div class="col-12 my-3">
-            <h5>{{bookingDetails['CustomerFirstName']}} {{bookingDetails['CustomerLastName']}}</h5>
-            <p style="font-size: 13px;">
-                <span>{{bookingDetails['address1'] ? bookingDetails['address1'] : '--'}}</span><br>
-                <span>Email: {{bookingDetails['email']}}</span><br>
-                <span>Phone Number: {{bookingDetails['phone_number']}}</span>
-            </p>
-        </div>
-        <div class="col-12">
-            <h5>Booking Details</h5>
-            <div class="row" style="font-size: 13px;">
-                <div class="col-md-3 col-lg-3 col-6 font-weight-bold my-2">Service Name</div>
-                <div class="col-md-3 col-lg-3 col-6 my-2">{{bookingDetails['service_name']}}</div>
-                <div class="col-md-3 col-lg-3 col-6 font-weight-bold my-2">Service Type</div>
-                <div class="col-md-3 col-lg-3 col-6 my-2">{{bookingDetails['service_type']}}</div>
-                <div class="col-md-3 col-lg-3 col-6 font-weight-bold my-2">Booking Date</div>
-                <div class="col-md-3 col-lg-3 col-6 my-2">{{bookingDetails['booking_date']}}</div>
-                <div class="col-md-3 col-lg-3 col-6 font-weight-bold my-2">Booking Time</div>
-                <div class="col-md-3 col-lg-3 col-6 my-2">{{bookingDetails['booking_time']}}</div>
-                <div class="col-md-3 col-lg-3 col-6 font-weight-bold my-2">Total Amount</div>
-                <div class="col-md-3 col-lg-3 col-6 my-2">{{bookingDetails['total_amount']}}/-</div>
-                <div class="col-md-3 col-lg-3 col-6 font-weight-bold my-2">Booking Status</div>
-                <div class="col-md-3 col-lg-3 col-6 my-2">{{bookingDetails['status_name']}}</div>
-                <div class="col-md-3 col-lg-3 col-6 font-weight-bold my-2">Vendor Name</div>
-                <div class="col-md-3 col-lg-3 col-6 my-2">{{bookingDetails['VendorFirstName']}} {{bookingDetails['VendorLastName']}}</div>
-                <div class="col-md-3 col-lg-3 col-6 font-weight-bold my-2">Booking Type</div>
-                <div class="col-md-3 col-lg-3 col-6 my-2">{{bookingDetails['booking_type']}}</div>
-            </div>
-        </div>
-        <div class="col-12 text-center my-5" *ngIf="type==='pending'">
-            <button type="button" class="btn btn-success btn-sm mx-1" (mousedown)="approveRequest()">Approve</button>
-            <button type="button" class="btn btn-danger btn-sm mx-1" (mousedown)="rejectRequest()">Reject</button>
-            <button type="button" class="btn btn-secondary btn-sm mx-1" routerLink="/admin/customer/customer-list/{{type}}">Close</button>
-        </div>
-        <div class="col-12 mt-5" *ngIf="type==='approve'">
-            <h5>Vendor Details</h5>
-            <div class="my-3" *ngIf="vendorList.length === 0">
-                No vendor Available on selected date
-            </div>
-            <div class="mt-3" *ngIf="vendorList.length !== 0">
-                <div class="row">
-                    <div class="col-12 col-md-3 col-lg-3 my-2" *ngFor="let vendor of vendorList">
-                        <div class="card pointer" (mousedown)="getNewVendor(vendor.VendorId)" [ngClass]="{'border-primary': selectedId === vendor.VendorId}">
-                            <div class="card-body">
-                                {{vendor.first_name | titlecase}} {{vendor.last_name | titlecase}}
-                                <p class="card-text" style="font-size: 13px;">
-                                    <span class="font-weight-bold">Service Name:</span> {{vendor.service_name}}<br>
-                                    <span class="font-weight-bold">Amount:</span> {{vendor.service_charge}}/-
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row" *ngIf="vendorSelectErrorText">
-                    <div class="col-12" style="color: red; font-size: 13px;">
-                        {{vendorSelectErrorText}}
-                    </div>
+        <span class="status-badge" [class.approved-badge]="bookingDetails.booking_status_id === 6">
+            <span></span>{{bookingDetails.status_name}}
+        </span>
+    </header>
+
+    <div class="detail-grid">
+        <section class="detail-card customer-card" aria-labelledby="customer-heading">
+            <div class="card-heading">
+                <span class="heading-icon customer-icon" aria-hidden="true">C</span>
+                <div>
+                    <h2 id="customer-heading">Customer information</h2>
+                    <p>Contact details for this booking</p>
                 </div>
             </div>
-        </div>
-        <div class="col-12 text-center my-5" *ngIf="type==='approve'">
-            <button type="button" class="btn btn-success btn-sm mx-1" (mousedown)="updateVendor()">Update</button>
-            <button type="button" class="btn btn-secondary btn-sm mx-1" routerLink="/admin/customer/customer-list/{{type}}">Close</button>
-        </div>
+            <dl class="info-list">
+                <div>
+                    <dt>Email address</dt>
+                    <dd>{{bookingDetails.email}}</dd>
+                </div>
+                <div>
+                    <dt>Phone number</dt>
+                    <dd>{{bookingDetails.phone_number}}</dd>
+                </div>
+                <div>
+                    <dt>Service address</dt>
+                    <dd>{{bookingDetails.address1}}</dd>
+                </div>
+            </dl>
+        </section>
+
+        <section class="detail-card booking-card" aria-labelledby="booking-heading">
+            <div class="card-heading">
+                <span class="heading-icon booking-icon" aria-hidden="true">B</span>
+                <div>
+                    <h2 id="booking-heading">Booking information</h2>
+                    <p>Service and appointment details</p>
+                </div>
+            </div>
+            <div class="service-summary">
+                <div>
+                    <span class="field-label">Requested service</span>
+                    <strong>{{bookingDetails.service_name}}</strong>
+                    <small>{{bookingDetails.service_type}}</small>
+                </div>
+                <div class="amount">
+                    <span class="field-label">Total amount</span>
+                    <strong>{{bookingDetails.total_amount}}/-</strong>
+                </div>
+            </div>
+            <dl class="info-list booking-info-list">
+                <div>
+                    <dt>Booking date</dt>
+                    <dd>{{bookingDetails.booking_date | date: 'dd MMM yyyy'}}</dd>
+                </div>
+                <div>
+                    <dt>Booking time</dt>
+                    <dd>{{bookingDetails.booking_time}}</dd>
+                </div>
+                <div>
+                    <dt>Booking type</dt>
+                    <dd>{{bookingDetails.booking_type}}</dd>
+                </div>
+                <div>
+                    <dt>Assigned provider</dt>
+                    <dd>
+                        <ng-container *ngIf="bookingDetails.VendorFirstName; else unassignedVendor">
+                            {{bookingDetails.VendorFirstName}} {{bookingDetails.VendorLastName}}
+                        </ng-container>
+                        <ng-template #unassignedVendor>Not assigned</ng-template>
+                    </dd>
+                </div>
+            </dl>
+        </section>
     </div>
-</div>
+
+    <section class="detail-card vendor-assignment" *ngIf="type === 'approve'" aria-labelledby="vendor-heading">
+        <div class="section-heading">
+            <div>
+                <p class="page-eyebrow">FULFILLMENT</p>
+                <h2 id="vendor-heading">Assign a service provider</h2>
+                <p>Select a provider for this customer booking.</p>
+            </div>
+            <span class="provider-count">{{vendorList.length}} providers</span>
+        </div>
+
+        <div class="vendor-options">
+            <button type="button" class="vendor-option" *ngFor="let vendor of vendorList"
+                [class.selected]="selectedId === vendor.VendorId"
+                [attr.aria-pressed]="selectedId === vendor.VendorId"
+                (click)="getNewVendor(vendor.VendorId)">
+                <span class="provider-avatar">{{vendor.first_name.charAt(0)}}{{vendor.last_name.charAt(0)}}</span>
+                <span class="provider-info">
+                    <strong>{{vendor.first_name}} {{vendor.last_name}}</strong>
+                    <small>{{vendor.service_name}}</small>
+                </span>
+                <span class="provider-price">{{vendor.service_charge}}/-</span>
+                <span class="selection-mark" aria-hidden="true"></span>
+            </button>
+        </div>
+
+        <p class="validation-message" *ngIf="vendorSelectErrorText">{{vendorSelectErrorText}}</p>
+        <div class="card-actions">
+            <button type="button" class="primary-button" (click)="updateVendor()">Save provider</button>
+            <a class="secondary-button" [routerLink]="['/admin/customer/customer-list', type]">Close</a>
+        </div>
+        <p class="demo-note">Changes are saved to demo data for this session.</p>
+    </section>
+
+    <section class="action-card" *ngIf="type === 'pending'" aria-label="Booking actions">
+        <div>
+            <h2>Review this booking</h2>
+            <p>Approve the request or reject it after reviewing the details above.</p>
+        </div>
+        <div class="card-actions">
+            <button type="button" class="reject-button" (click)="rejectRequest()">Reject booking</button>
+            <button type="button" class="primary-button" (click)="approveRequest()">Approve booking</button>
+            <a class="secondary-button" [routerLink]="['/admin/customer/customer-list', type]">Close</a>
+        </div>
+    </section>
+</main>
