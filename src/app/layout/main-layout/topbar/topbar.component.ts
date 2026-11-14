@@ -1,6 +1,6 @@
 import { Router } from '@angular/router';
-import { Component, OnInit, HostListener } from '@angular/core';
-import { AuthenticationService } from 'src/app/authentication.service';
+import { Component, OnInit, HostListener, ElementRef } from '@angular/core';
+import { UserDetails, AuthenticationService } from 'src/app/authentication.service';
 
 @Component({
   selector: 'app-topbar',
@@ -11,27 +11,45 @@ export class TopbarComponent implements OnInit {
 
   status = false;
   header;
+  userDetails: UserDetails;
+
   constructor(
     private _authService: AuthenticationService,
-    private route: Router
+    private route: Router,
+    private elementRef: ElementRef
   ) { }
 
   ngOnInit() {
+    this.userDetails = this._authService.getUserDetails();
     this._authService.headerText
       .subscribe((response) => {
         this.header = response;
       })
   }
 
+  get userInitials(): string {
+    const firstName = this.userDetails && this.userDetails.first_name || '';
+    const lastName = this.userDetails && this.userDetails.last_name || '';
+    return (firstName.charAt(0) + lastName.charAt(0)).toUpperCase() || 'A';
+  }
+
   toggleProfile() {
-    if (this.status === true)
+    this.status = !this.status;
+  }
+
+  @HostListener('document:click', ['$event'])
+  closeProfileOnOutsideClick(event: Event) {
+    if (!this.elementRef.nativeElement.contains(event.target)) {
       this.status = false;
-    else
-      this.status = true;
+    }
+  }
+
+  @HostListener('document:keydown.escape')
+  closeProfileOnEscape() {
+    this.status = false;
   }
 
   logout() {
-    console.log('logout hit');
     localStorage.clear();
     this.route.navigateByUrl('/auth');
   }

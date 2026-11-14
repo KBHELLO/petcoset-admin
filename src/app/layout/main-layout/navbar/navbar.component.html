@@ -1,61 +1,78 @@
-<div class="side-bar project-font">
-    <div class="mt-3">
-        <div class="d-flex flex-row p-2">
-            <div class="w-25 border rounded p-2">
-                <img src="../../../../assets/image/logo-main.png" alt="company_logo" class="img-fluid" style="height: 50px; width: 80px;">
-            </div>
-            <div class="w-75 p-2">
-                <h6 class="mb-0 font-weight-bold">{{userDetails.first_name | titlecase}} {{userDetails.last_name | titlecase}}</h6>
-                <small>Admin</small>
-            </div>
-        </div>
-    </div>
-    <div class="service-mobile mt-4" style="height: 400px; overflow-y: auto;">
-        <ul class="list-group font-weight-bold" style="font-size: 13px;">
-            <li class="list-group-item border-0" style="cursor: pointer; outline: none;" routerLink="/admin/dashboard">
-                Dashboard
-            </li>
-            <li class="list-group-item border-0" style="cursor: pointer; outline: none;" routerLink="/admin/vendor/vendor-list">
-                Pending Vendors
-            </li>
-            <li class="list-group-item border-0" style="cursor: pointer; outline: none;" routerLink="/admin/vendor/vendor-verified-list">Verified Vendors</li>
-            <li class="list-group-item border-0" style="cursor: pointer; outline: none;" routerLink="/admin/customer/customer-list/pending">
-                Pending Customers
-            </li>
-        </ul>
-    </div>
-</div>
-<!--  -->
-<div class="mobile project-font">
-    <button class="navbar-buttons" type="submit" (mousedown)="sidebarToggle()"><i class="fa fa-bars" aria-hidden="true"
-            style="color: lightblue; zoom: 1.5;"></i></button>
-</div>
+<button
+    type="button"
+    class="mobile-toggle"
+    aria-label="Toggle navigation"
+    [attr.aria-expanded]="status"
+    (click)="sidebarToggle()">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 6h16M4 12h16M4 18h16"></path>
+    </svg>
+</button>
 
-<div class="mobile-sidebar shadow project-font" [ngClass]="{'open-sidebar': status === true, 'close-sidebar': status === false}">
-    <div (mousedown)="closeSidebar()" class="close-button"><i class="fa fa-times" aria-hidden="true" style="color: lightblue; zoom: 1.5;"></i></div>
-    <div class="mt-3">
-        <div class="d-flex flex-row p-2">
-            <div class="w-25 border rounded p-2">
-                <img src="../../../../assets/image/logo-main.png" alt="company_logo" class="img-fluid" style="height: 50px; width: 80px;">
-            </div>
-            <div class="w-75 p-2">
-                <h6 class="mb-0 font-weight-bold">{{userDetails.first_name | titlecase}} {{userDetails.last_name | titlecase}}</h6>
-                <small>Admin</small>
-            </div>
+<div class="sidebar-backdrop" *ngIf="status" (click)="closeSidebar()"></div>
+
+<aside class="side-bar project-font" [class.mobile-open]="status">
+    <div class="brand-row">
+        <div class="brand-mark">
+            <img src="../../../../assets/image/logo-main.png" alt="">
         </div>
+        <div class="brand-copy">
+            <strong>Petcoset</strong>
+            <span>ADMIN CONSOLE</span>
+        </div>
+        <button type="button" class="sidebar-close" aria-label="Close navigation" (click)="closeSidebar()">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m6 6 12 12M18 6 6 18"></path>
+            </svg>
+        </button>
     </div>
-    <div class="service-mobile mt-4" style="height: 400px; overflow-y: auto;">
-        <ul class="list-group font-weight-bold" style="font-size: 13px;">
-            <li class="list-group-item border-0" style="cursor: pointer; outline: none;" routerLink="/admin/dashboard">
-                Dashboard
-            </li>
-            <li class="list-group-item border-0" style="cursor: pointer; outline: none;" routerLink="/admin/vendor/vendor-list">
-                Pending Vendors
-            </li>
-            <li class="list-group-item border-0" style="cursor: pointer; outline: none;" routerLink="/admin/vendor/vendor-verified-list">Verified Vendors</li>
-            <li class="list-group-item border-0" style="cursor: pointer; outline: none;" routerLink="/admin/customer/customer-list/pending">
-                Pending Customers
-            </li>
-        </ul>
+
+    <div class="profile-card">
+        <div class="profile-avatar">{{userInitials}}</div>
+        <div class="profile-copy">
+            <strong>{{userDetails?.first_name | titlecase}} {{userDetails?.last_name | titlecase}}</strong>
+            <span>Administrator</span>
+        </div>
+        <span class="profile-status" aria-label="Online"></span>
     </div>
-</div>
+
+    <nav class="sidebar-navigation" aria-label="Main navigation">
+        <p class="navigation-label">Workspace</p>
+        <a routerLink="/admin/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeSidebar()">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="3" y="3" width="8" height="8" rx="1.5"></rect>
+                <rect x="13" y="3" width="8" height="5" rx="1.5"></rect>
+                <rect x="13" y="10" width="8" height="11" rx="1.5"></rect>
+                <rect x="3" y="13" width="8" height="8" rx="1.5"></rect>
+            </svg>
+            <span>Dashboard</span>
+        </a>
+        <a routerLink="/admin/vendor/vendor-list" routerLinkActive="active" (click)="closeSidebar()">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 10.5 4.5 4h15l1.5 6.5M5 10v10h14V10M3 10.5a2.5 2.5 0 0 0 5 0 2.5 2.5 0 0 0 5 0 2.5 2.5 0 0 0 5 0 2.5 2.5 0 0 0 5 0"></path>
+                <path d="M9 20v-5h6v5"></path>
+            </svg>
+            <span>Pending vendors</span>
+        </a>
+        <a routerLink="/admin/vendor/vendor-verified-list" routerLinkActive="active" (click)="closeSidebar()">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 3 19 6v5c0 4.5-2.8 7.7-7 10-4.2-2.3-7-5.5-7-10V6l7-3Z"></path>
+                <path d="m9 12 2 2 4-4"></path>
+            </svg>
+            <span>Verified vendors</span>
+        </a>
+        <a routerLink="/admin/customer/customer-list/pending" routerLinkActive="active" (click)="closeSidebar()">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="9" cy="8" r="3.5"></circle>
+                <path d="M2.5 20v-1.5A5.5 5.5 0 0 1 8 13h2a5.5 5.5 0 0 1 5.5 5.5V20M16 5.2a3.5 3.5 0 0 1 0 6.6M17 14h.5a4 4 0 0 1 4 4v2"></path>
+            </svg>
+            <span>Pending customers</span>
+        </a>
+    </nav>
+
+    <div class="sidebar-footer">
+        <span class="footer-indicator"></span>
+        <span>Petcoset Admin</span>
+        <small>v1.0</small>
+    </div>
+</aside>

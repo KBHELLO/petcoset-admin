@@ -1,24 +1,87 @@
-<div class="container-fluid p-font">
-    <div class="row p-2">
-        <div class="col-md-3 col-lg-3 col-sm-12 mt-2">
-            <div (mousedown)="getpath('vendor')">
-                <app-card [bgcolor]="'primary'" [bodyLable]="'Vendor (Pending)'"></app-card>
+<main class="dashboard-shell p-font">
+    <section class="welcome-panel">
+        <div>
+            <p class="welcome-eyebrow">PETCOSET ADMINISTRATION</p>
+            <h1>Dashboard</h1>
+            <p class="welcome-copy">A quick overview of your vendors and customer bookings.</p>
+        </div>
+        <div class="workspace-badge">
+            <span class="status-dot"></span>
+            Admin workspace
+        </div>
+    </section>
+
+    <section class="dashboard-section" aria-labelledby="vendor-overview-heading">
+        <div class="section-heading">
+            <div>
+                <h2 id="vendor-overview-heading">Vendor overview</h2>
+                <p>Track applications and verified partners.</p>
+            </div>
+            <span class="data-note">Demo data</span>
+        </div>
+
+        <div class="overview-grid">
+            <button type="button" class="overview-card pending-card" (click)="getpath('vendor')">
+                <span class="card-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M3 10.5 4.5 4h15l1.5 6.5M5 10v9h14v-9M3 10.5a2.5 2.5 0 0 0 5 0 2.5 2.5 0 0 0 5 0 2.5 2.5 0 0 0 5 0 2.5 2.5 0 0 0 5 0M9 19v-5h6v5" />
+                    </svg>
+                </span>
+                <span class="card-title">Pending vendors</span>
+                <span class="card-count">{{vendorCount}}</span>
+                <span class="card-link">Review applications <span aria-hidden="true">&rarr;</span></span>
+            </button>
+
+            <button type="button" class="overview-card verified-card" (click)="getpath('vendor-verified')">
+                <span class="card-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 3 19 6v5c0 4.5-2.8 7.7-7 10-4.2-2.3-7-5.5-7-10V6l7-3Z" />
+                        <path d="m9 12 2 2 4-4" />
+                    </svg>
+                </span>
+                <span class="card-title">Verified vendors</span>
+                <span class="card-count">{{verifiedVendorCount}}</span>
+                <span class="card-link">View partners <span aria-hidden="true">&rarr;</span></span>
+            </button>
+        </div>
+    </section>
+
+    <section class="dashboard-section customer-section" aria-labelledby="customer-actions-heading">
+        <div class="section-heading">
+            <div>
+                <h2 id="customer-actions-heading">Customer bookings</h2>
+                <p>Review and manage booking requests.</p>
             </div>
         </div>
-        <div class="col-md-3 col-lg-3 col-sm-12 mt-2">
-            <div (mousedown)="getpath('vendor-verified')">
-                <app-card [bgcolor]="'warning'" [bodyLable]="'Vendor (Verified)'"></app-card>
-            </div>
+
+        <div class="action-grid">
+            <button type="button" class="action-card" (click)="getpath('customer')">
+                <span class="action-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="3.5" y="5" width="17" height="16" rx="2" />
+                        <path d="M7.5 3v4M16.5 3v4M3.5 10h17M8 14h3M8 17h6" />
+                    </svg>
+                </span>
+                <span class="action-text">
+                    <strong>Pending requests</strong>
+                    <small>Open the queue and review new bookings</small>
+                </span>
+                <span class="action-arrow" aria-hidden="true">&rarr;</span>
+            </button>
+
+            <button type="button" class="action-card" (click)="getpath('customer-approve')">
+                <span class="action-icon approved-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="9" />
+                        <path d="m8 12 2.5 2.5L16 9" />
+                    </svg>
+                </span>
+                <span class="action-text">
+                    <strong>Approved bookings</strong>
+                    <small>Browse customer requests already approved</small>
+                </span>
+                <span class="action-arrow" aria-hidden="true">&rarr;</span>
+            </button>
         </div>
-        <div class="col-md-3 col-lg-3 col-sm-12 mt-2">
-            <div (mousedown)="getpath('customer')">
-                <app-card [bgcolor]="'danger'" [bodyLable]="'Customer (Pending)'"></app-card>
-            </div>
-        </div>
-        <div class="col-md-3 col-lg-3 col-sm-12 mt-2">
-            <div (mousedown)="getpath('customer-approve')">
-                <app-card [bgcolor]="'success'" [bodyLable]="'Customer (Approve)'"></app-card>
-            </div>
-        </div>
-    </div>
-</div>
+    </section>
+</main>

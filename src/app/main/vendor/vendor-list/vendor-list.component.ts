@@ -1,7 +1,6 @@
-import { NgxSpinnerService } from 'ngx-spinner';
 import { Component, OnInit } from '@angular/core';
 import { AuthenticationService } from 'src/app/authentication.service';
-import { Router } from '@angular/router';
+import { MOCK_VENDORS } from '../vendor.mock';
 
 @Component({
   selector: 'app-vendor-list',
@@ -11,28 +10,29 @@ import { Router } from '@angular/router';
 export class VendorListComponent implements OnInit {
 
   vendorList = [];
+  searchTerm = '';
+
   constructor(
-    private _authService: AuthenticationService,
-    private spinner: NgxSpinnerService
+    private _authService: AuthenticationService
   ) { }
 
   ngOnInit() {
-    this.spinner.show();
     this._authService.headerText.next({
       headerStrong: 'Pending Vendors List'
     });
-    this.getvendorList();
+    this.vendorList = MOCK_VENDORS.filter(vendor => vendor.status_name === 'Pending');
   }
 
-  getvendorList() {
-    setTimeout(()=>{
-      this._authService.request('get', `vendors?status_id=Confirmed`)
-        .subscribe((response) => {
-          this.vendorList = response.res;
-          console.log('vendor list ', this.vendorList);
-          this.spinner.hide();
-        });
-    },1000);
+  get filteredVendors() {
+    const query = this.searchTerm.trim().toLowerCase();
+    if (!query) {
+      return this.vendorList;
+    }
+
+    return this.vendorList.filter(vendor => {
+      const searchableText = `${vendor.first_name} ${vendor.last_name} ${vendor.email} ${vendor.phone_number}`;
+      return searchableText.toLowerCase().indexOf(query) !== -1;
+    });
   }
 
 }

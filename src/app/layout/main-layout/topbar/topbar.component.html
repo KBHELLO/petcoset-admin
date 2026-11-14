@@ -1,17 +1,41 @@
-<nav class="navbar navbar-light navbar-expand-lg bg-light shadow-sm p-font border-bottom" style="height: 60px; font-family: 'Roboto', sans-serif !important;">
-    <p class="header-text">{{header.headerStrong}}</p>
-    <!-- <img src="../../../../assets/image/interface.png" alt="" srcset="" class="logout-iocn" (mousedown)="toggleProfile()"> -->
-    <div class="btn-group dropleft menu-button p-font">
-        <img src="../../../../assets/image/interface.png" alt="" srcset="" class="logout-iocn" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <div class="dropdown-menu menu-list" aria-labelledby="dropdownMenuButton">
-            <!-- <a class="dropdown-item border-bottom p-2" href="#"><img src="../../../../assets/image/avatar.png" alt="" srcset="" style="width: 20px;" class="mr-3">Profile</a> -->
-            <a class="dropdown-item p-2" href="#" (mousedown)="logout()"><img src="../../../../assets/image/signs.png" alt="" srcset="" style="width: 20px;" class="mr-3">Logout</a>
-            <!-- <a class="dropdown-item" href="#">Something else here</a> -->
+<header class="topbar p-font">
+    <div class="page-context">
+        <span class="context-label">ADMIN WORKSPACE</span>
+        <h1>{{header?.headerStrong || 'Dashboard'}}</h1>
+    </div>
+
+    <div class="account-area">
+        <button
+            type="button"
+            class="account-trigger"
+            aria-label="Account menu"
+            [attr.aria-expanded]="status"
+            (click)="toggleProfile()">
+            <span class="account-avatar">{{userInitials}}</span>
+            <span class="account-copy">
+                <strong>{{userDetails?.first_name | titlecase}} {{userDetails?.last_name | titlecase}}</strong>
+                <small>Administrator</small>
+            </span>
+            <svg class="account-chevron" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m7 10 5 5 5-5"></path>
+            </svg>
+        </button>
+
+        <div class="account-menu" *ngIf="status">
+            <div class="menu-user">
+                <span class="account-avatar small-avatar">{{userInitials}}</span>
+                <span>
+                    <strong>{{userDetails?.first_name | titlecase}} {{userDetails?.last_name | titlecase}}</strong>
+                    <small>Signed in as administrator</small>
+                </span>
+            </div>
+            <button type="button" class="signout-button" (click)="logout()">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M10 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5"></path>
+                    <path d="M14 16l4-4-4-4M18 12H9"></path>
+                </svg>
+                Sign out
+            </button>
         </div>
     </div>
-</nav>
-
-<div class="logout-panel shadow border rounded" [ngClass]="{'open-panel': status === true, 'close-panel': status === false}">
-    <img src="../../../../assets/image/signs.png" alt="" srcset="" style="width: 20px;" class="mr-2">
-    <span style="line-height: 1; cursor: pointer;">Logout</span>
-</div>
+</header>

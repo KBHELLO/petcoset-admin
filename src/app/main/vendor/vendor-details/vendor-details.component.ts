@@ -1,11 +1,8 @@
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { AuthenticationService } from 'src/app/authentication.service';
-import { NgxSpinnerService } from 'ngx-spinner';
-import { ActivatedRoute, Router } from '@angular/router';
-import { RequiredValidator } from 'src/app/core/validator/required.validator';
-import { ToastrService } from 'ngx-toastr';
-import { forkJoin } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { MOCK_VENDORS } from '../vendor.mock';
 
 @Component({
   selector: 'app-vendor-details',
@@ -16,7 +13,7 @@ export class VendorDetailsComponent implements OnInit {
 
   parentForm: FormGroup;
   bookingId;
-  vendorDetails = [];
+  vendorDetails: any = {};
   vendorBankDetails = [];
   isUpdateError = false;
   isUpdated;
@@ -24,15 +21,11 @@ export class VendorDetailsComponent implements OnInit {
 
   constructor(
     private _authService: AuthenticationService,
-    private spinner: NgxSpinnerService,
     private _activatedRoute: ActivatedRoute,
-    private _formBuilder: FormBuilder,
-    private toastr: ToastrService,
-    private route: Router
+    private _formBuilder: FormBuilder
   ) { }
 
   ngOnInit() {
-    this.spinner.show();
     this.bookingId = this._activatedRoute.snapshot.params.id;
     this._authService.headerText.next({
       headerStrong: 'Vendor Details'
@@ -42,18 +35,7 @@ export class VendorDetailsComponent implements OnInit {
   }
 
   getvendorDetailsbyId() {
-    setTimeout(() => {
-      let vendor = this._authService.request('get', `vendors?vendor_id=${this.bookingId}`);
-      let details = this._authService.request('get', `vendors/details?vendor_id=${this.bookingId}`);
-      forkJoin([vendor, details]).subscribe(response => {
-        console.log('vendor details ', response);
-        this.vendorDetails = response[0].res[0];
-        this.vendorDetails['account_number'] = response[1].res[0] ? response[1].res[0].account_number : '--';
-        this.vendorDetails['bank_name'] = response[1].res[0] ? response[1].res[0].bank_name : '--';
-        this.vendorDetails['ifsc_code'] = response[1].res[0] ? response[1].res[0].ifsc_code : '--';
-        this.spinner.hide();
-      });
-    }, 1000);
+    this.vendorDetails = MOCK_VENDORS.find(vendor => vendor.id === Number(this.bookingId)) || {};
   }
 
   initParentForm() {
@@ -66,25 +48,12 @@ export class VendorDetailsComponent implements OnInit {
     if (this.parentForm.invalid) {
       this.markFormGroupTouched(this.parentForm);
     } else {
-      this.spinner.show();
-      const data = { ...this.parentForm.value };
-      data.account_number = this.vendorDetails['account_number'];
-      data.vendor_id = +this.bookingId;
-      this.spinner.hide();
-      if(data.account_number) {
-        this._authService.request('put', `vendors/details`, data)
-        .subscribe((response) => {
-          this.isUpdated = 'Account Updated Successfully';
-          this.route.navigateByUrl('/admin/vendor/vendor-details/');
-          this.spinner.hide();
-        }, err=>{
-          this.isUpdated = 'Something went wrong!';
-          this.route.navigateByUrl('/admin/vendor/vendor-details/');
-          this.spinner.hide();
-        })
+      if (this.vendorDetails.account_number) {
+        this.vendorDetails.payment_gateway_account_id =
+          this.parentForm.value.payment_gateway_account_id;
+        this.isUpdated = 'Account Updated Successfully';
       } else {
         this.isUpdateError = true;
-        this.spinner.hide();
       }
     }
   }

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthenticationService } from 'src/app/authentication.service';
-import { Router } from '@angular/router';
-import { NgxSpinnerService } from 'ngx-spinner';
+import { MOCK_VENDORS } from '../vendor.mock';
 
 @Component({
   selector: 'app-vendor-verified',
@@ -11,29 +10,29 @@ import { NgxSpinnerService } from 'ngx-spinner';
 export class VendorVerifiedComponent implements OnInit {
 
   verifiedVendorList = [];
+  searchTerm = '';
+
   constructor(
-    private _authService: AuthenticationService,
-    private route: Router,
-    private spinner: NgxSpinnerService,
+    private _authService: AuthenticationService
   ) { }
 
   ngOnInit() {
-    this.spinner.show();
     this._authService.headerText.next({
       headerStrong: 'Verified Vendors List'
     });
-    this.getVerifiedVendorList();
+    this.verifiedVendorList = MOCK_VENDORS.filter(vendor => vendor.status_name === 'Verified');
   }
 
-  getVerifiedVendorList() {
-    setTimeout(() => {
-      this._authService.request('get',`vendors?status_id=Verified`)
-        .subscribe((response) => {
-          console.log('vendor list ', response);
-          this.verifiedVendorList = response.res;
-          this.spinner.hide()
-        })
-    }, 1000);
+  get filteredVendors() {
+    const query = this.searchTerm.trim().toLowerCase();
+    if (!query) {
+      return this.verifiedVendorList;
+    }
+
+    return this.verifiedVendorList.filter(vendor => {
+      const searchableText = `${vendor.first_name} ${vendor.last_name} ${vendor.email} ${vendor.phone_number}`;
+      return searchableText.toLowerCase().indexOf(query) !== -1;
+    });
   }
 
 }

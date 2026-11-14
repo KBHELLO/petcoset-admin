@@ -1,7 +1,7 @@
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { AuthenticationService } from 'src/app/authentication.service';
-import { NgxSpinnerService } from 'ngx-spinner';
+import { MOCK_VENDORS } from '../../vendor/vendor.mock';
 
 @Component({
   selector: 'app-dashboard',
@@ -15,35 +15,19 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private _authService: AuthenticationService,
-    private route: Router,
-    private spinner: NgxSpinnerService,
+    private route: Router
   ) { }
 
   ngOnInit() {
-    this.spinner.show();
     this._authService.headerText.next({
       headerStrong: 'Dashboard'
     });
-    this.getVendorCount();
-    this.getVerifiedVendorCount();
+    this.getVendorCounts();
   }
 
-  getVendorCount() {
-    setTimeout(() => {
-      this._authService.request('get', 'vendors?status_id=Pending')
-        .subscribe((response) => {
-          this.vendorCount = response.res.length;
-          this.spinner.hide();
-        })
-    }, 1000);
-  }
-
-  getVerifiedVendorCount() {
-    this._authService.request('get', 'vendors?status_id=Verified')
-      .subscribe((response) => {
-        this.verifiedVendorCount = response.res.length;
-        this.spinner.hide();
-      })
+  getVendorCounts() {
+    this.vendorCount = MOCK_VENDORS.filter(vendor => vendor.status_name === 'Pending').length;
+    this.verifiedVendorCount = MOCK_VENDORS.filter(vendor => vendor.status_name === 'Verified').length;
   }
 
   getpath(value) {

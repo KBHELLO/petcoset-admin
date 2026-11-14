@@ -1,5 +1,5 @@
 import { UserDetails, AuthenticationService } from './../../../authentication.service';
-import { Component, OnInit, HostListener, ElementRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-navbar',
@@ -10,11 +10,8 @@ export class NavbarComponent implements OnInit {
 
   status: boolean = false;
   userDetails: UserDetails;
-  vendorStatus = false;
-  customerStatus = false;
 
   constructor(
-    private eRef: ElementRef,
     private _authService: AuthenticationService
   ) { }
 
@@ -22,16 +19,18 @@ export class NavbarComponent implements OnInit {
     this.userDetails = this._authService.getUserDetails();
   }
 
+  get userInitials(): string {
+    const firstName = this.userDetails && this.userDetails.first_name || '';
+    const lastName = this.userDetails && this.userDetails.last_name || '';
+    return (firstName.charAt(0) + lastName.charAt(0)).toUpperCase() || 'A';
+  }
+
   sidebarToggle() {
-    console.log('toggle button hit', this.status);
-    if (this.status === true)
-      this.status = false;
-    else
-      this.status = true;
+    this.status = !this.status;
   }
 
   closeSidebar() {
-    this.status = false
+    this.status = false;
   }
 
 }

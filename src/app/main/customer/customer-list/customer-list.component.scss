@@ -10,3 +10,36 @@
 .service-mobile {
     -ms-overflow-style: none;
 }
+@import '../../vendor/vendor-list/vendor-list.component.scss';
+
+.service-name {
+    display: block;
+    color: #33465e;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.service-type {
+    display: block;
+    margin-top: 4px;
+    color: #8b98a7;
+    font-size: 9px;
+}
+
+.date-cell {
+    color: #53647a !important;
+    white-space: nowrap;
+}
+
+@media (max-width: 767.98px) {
+    .customer-page .vendor-table th:nth-child(2),
+    .customer-page .vendor-table td:nth-child(2) {
+        width: 33%;
+    }
+
+    .customer-page .vendor-table .service-name {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}

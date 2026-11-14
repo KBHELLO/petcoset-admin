@@ -2,7 +2,7 @@
 @import "../../../assets/variable";
 @import "../../../assets/responsive";
 .navigation__nav {
-    width: 300px;
+    width: 270px;
     height: 100vh;
     left: 0;
     top: 0;
@@ -14,12 +14,6 @@
     z-index: 999;
     /*  padding: .5rem 0 .5rem 1rem; */
     background: #fff;
-    @media #{$tab} {
-        width: 0;
-    }
-    @media #{$min-mobile} {
-        width: 0;
-    }
 }
 
 .topbar_area {
@@ -27,8 +21,8 @@
 }
 
 .main_body {
-    margin-left: 300px;
-    width: calc(100% - 300px);
+    margin-left: 270px;
+    width: calc(100% - 270px);
     transition: .3s;
     min-height: 100vh;
     .main_view {
@@ -36,11 +30,15 @@
         // min-height: 600px
         // min-height: 100vh;
     }
-    @media #{$tab} {
-        margin-left: 0;
-        width: 100%;
+}
+
+@media (max-width: 991.98px) {
+    .navigation__nav {
+        width: 0;
+        border: 0 !important;
     }
-    @media #{$min-mobile} {
+
+    .main_body {
         margin-left: 0;
         width: 100%;
     }
